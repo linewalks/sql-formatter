@@ -31,10 +31,10 @@ function getArgs() {
 
   const indentationGroup = parser.add_mutually_exclusive_group();
   indentationGroup.add_argument('-i', '--indent', {
-    help: 'Number of spaces to indent query blocks (defaults to 2)',
+    help: 'Number of spaces to indent query blocks (defaults to 4)',
     metavar: 'N',
     type: 'int',
-    default: 2,
+    default: 4,
   });
   indentationGroup.add_argument('-t', '--tab-indent', {
     help: 'Indent query blocks with tabs instead of spaces',
@@ -50,7 +50,7 @@ function getArgs() {
     help: 'How many newlines to insert between queries (separated by ";")',
     metavar: 'N',
     type: 'int',
-    default: 1,
+    default: 2,
   });
 
   parser.add_argument('--version', {
