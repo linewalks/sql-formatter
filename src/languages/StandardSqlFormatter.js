@@ -345,7 +345,11 @@ const reservedNewlineWords = [
   'ELSE',
   'OR',
   'WHEN',
+];
+
+const reservedNewlineWordsAlone = [
   // joins
+  'ON',
   'JOIN',
   'INNER JOIN',
   'LEFT JOIN',
@@ -356,7 +360,7 @@ const reservedNewlineWords = [
   'FULL OUTER JOIN',
   'CROSS JOIN',
   'NATURAL JOIN',
-];
+]
 
 export default class StandardSqlFormatter extends Formatter {
   tokenizer() {
@@ -364,6 +368,7 @@ export default class StandardSqlFormatter extends Formatter {
       reservedWords,
       reservedTopLevelWords,
       reservedNewlineWords,
+      reservedNewlineWordsAlone,
       reservedTopLevelWordsNoIndent,
       stringTypes: [`""`, "''"],
       openParens: ['(', 'CASE'],

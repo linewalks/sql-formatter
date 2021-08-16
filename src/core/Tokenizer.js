@@ -8,6 +8,7 @@ export default class Tokenizer {
    *  @param {String[]} cfg.reservedWords Reserved words in SQL
    *  @param {String[]} cfg.reservedTopLevelWords Words that are set to new line separately
    *  @param {String[]} cfg.reservedNewlineWords Words that are set to newline
+   *  @param {String[]} cfg.reservedNewlineWordsAlone Words that are set to newline
    *  @param {String[]} cfg.reservedTopLevelWordsNoIndent Words that are top level but have no indentation
    *  @param {String[]} cfg.stringTypes String types to enable: "", '', ``, [], N''
    *  @param {String[]} cfg.openParens Opening parentheses to enable, like (, [
@@ -37,6 +38,7 @@ export default class Tokenizer {
       cfg.reservedTopLevelWordsNoIndent
     );
     this.RESERVED_NEWLINE_REGEX = regexFactory.createReservedWordRegex(cfg.reservedNewlineWords);
+    this.RESERVED_NEWLINE_ALONE_REGEX = regexFactory.createReservedWordRegex(cfg.reservedNewlineWordsAlone);
     this.RESERVED_PLAIN_REGEX = regexFactory.createReservedWordRegex(cfg.reservedWords);
 
     this.WORD_REGEX = regexFactory.createWordRegex(cfg.specialWordChars);
@@ -149,8 +151,8 @@ export default class Tokenizer {
   getCloseParenToken(input) {
     return this.getTokenOnFirstMatch({
       input,
-      type: tokenTypes.CLOSE_PAREN,
-      regex: this.CLOSE_PAREN_REGEX,
+      type: tokenTypes.END_OF_QUERY,
+      regex: this.END_OF_QUERY_REGEX,
     });
   }
 
@@ -226,6 +228,7 @@ export default class Tokenizer {
     return (
       this.getTopLevelReservedToken(input) ||
       this.getNewlineReservedToken(input) ||
+      this.getNewlineReservedTokenAlone(input) ||
       this.getTopLevelReservedTokenNoIndent(input) ||
       this.getPlainReservedToken(input)
     );
@@ -244,6 +247,14 @@ export default class Tokenizer {
       input,
       type: tokenTypes.RESERVED_NEWLINE,
       regex: this.RESERVED_NEWLINE_REGEX,
+    });
+  }
+
+  getNewlineReservedTokenAlone(input) {
+    return this.getTokenOnFirstMatch({
+      input,
+      type: tokenTypes.RESERVED_NEWLINE_ALONE,
+      regex: this.RESERVED_NEWLINE_ALONE_REGEX
     });
   }
 

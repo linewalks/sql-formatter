@@ -4,6 +4,7 @@ import InlineBlock from './InlineBlock';
 import Params from './Params';
 import { trimSpacesEnd } from '../utils';
 import { isAnd, isBetween, isLimit } from './token';
+import { last } from '../../lib/utils';
 
 export default class Formatter {
   /**
@@ -80,6 +81,8 @@ export default class Formatter {
       } else if (token.type === tokenTypes.RESERVED_NEWLINE) {
         formattedQuery = this.formatNewlineReservedWord(token, formattedQuery);
         this.previousReservedToken = token;
+      } else if (token.type == tokenTypes.RESERVED_NEWLINE_ALONE) {
+        formattedQuery = this.formatNewlineReservedWordAlone(token, formattedQuery);
       } else if (token.type === tokenTypes.RESERVED) {
         formattedQuery = this.formatWithSpaces(token, formattedQuery);
         this.previousReservedToken = token;
@@ -138,6 +141,13 @@ export default class Formatter {
       return this.formatWithSpaces(token, query);
     }
     return this.addNewline(query) + this.equalizeWhitespace(this.show(token)) + ' ';
+  }
+
+  formatNewlineReservedWordAlone(token, query) {
+    this.indentation.decreaseFromLevel()
+    query = this.addNewline(query) + this.equalizeWhitespace(this.show(token));
+    this.indentation.increaseFromLevel()
+    return this.addNewline(query);
   }
 
   // Replace any sequence of whitespace characters with single space
@@ -213,7 +223,7 @@ export default class Formatter {
 
   formatQuerySeparator(token, query) {
     this.indentation.resetIndentation();
-    return trimSpacesEnd(query) + this.show(token) + '\n'.repeat(this.cfg.linesBetweenQueries || 1);
+    return trimSpacesEnd(query) + this.show(token) + '\n'.repeat(this.cfg.linesBetweenQueries || 2);
   }
 
   // Converts token to string (uppercasing it if needed)
@@ -224,6 +234,7 @@ export default class Formatter {
         type === tokenTypes.RESERVED_TOP_LEVEL ||
         type === tokenTypes.RESERVED_TOP_LEVEL_NO_INDENT ||
         type === tokenTypes.RESERVED_NEWLINE ||
+        type === tokenTypes.RESERVED_NEWLINE_ALONE ||
         type === tokenTypes.OPEN_PAREN ||
         type === tokenTypes.CLOSE_PAREN)
     ) {

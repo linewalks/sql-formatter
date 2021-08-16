@@ -2,6 +2,7 @@ import { last } from '../utils';
 
 const INDENT_TYPE_TOP_LEVEL = 'top-level';
 const INDENT_TYPE_BLOCK_LEVEL = 'block-level';
+const INDENT_TYPE_FROM_LEVEL = 'from-level';
 
 /**
  * Manages indentation levels.
@@ -35,6 +36,12 @@ export default class Indentation {
     this.indentTypes.push(INDENT_TYPE_TOP_LEVEL);
   }
 
+  increaseFromLevel() {
+    if (last(this.indentTypes) !== INDENT_TYPE_FROM_LEVEL) {
+      this.indentTypes.push(INDENT_TYPE_FROM_LEVEL);
+    }
+  }
+
   /**
    * Increases indentation by one block-level indent.
    */
@@ -47,7 +54,22 @@ export default class Indentation {
    * Does nothing when the previous indent is not top-level.
    */
   decreaseTopLevel() {
-    if (this.indentTypes.length > 0 && last(this.indentTypes) === INDENT_TYPE_TOP_LEVEL) {
+    // if (this.indentTypes.length > 0 && last(this.indentTypes) === INDENT_TYPE_TOP_LEVEL) {
+    //   this.indentTypes.pop();
+    // }
+    while (this.indentTypes.length > 0) {
+      if (last(this.indentTypes) === INDENT_TYPE_BLOCK_LEVEL) {
+        break;
+      }
+      const type = this.indentTypes.pop();
+      if (type === INDENT_TYPE_TOP_LEVEL) {
+        break;
+      }
+    }
+  }
+
+  decreaseFromLevel() {
+    if (this.indentTypes.length > 0 && last(this.indentTypes) === INDENT_TYPE_FROM_LEVEL) {
       this.indentTypes.pop();
     }
   }
@@ -63,6 +85,12 @@ export default class Indentation {
       if (type !== INDENT_TYPE_TOP_LEVEL) {
         break;
       }
+    }
+  }
+
+  decreaseLastBlockLevel() {
+    if (this.indentTypes.length > 0 && last(this.indentTypes) === INDENT_TYPE_BLOCK_LEVEL) {
+      this.indentTypes.pop();
     }
   }
 
