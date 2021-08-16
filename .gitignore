@@ -3,3 +3,7 @@ lib
 node_modules
 .DS_Store
 coverage
+
+sql-formatter-linux
+sql-formatter-macos
+sql-formatter-win.exe

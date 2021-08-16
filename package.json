@@ -8,6 +8,11 @@
   "bin": {
     "sql-formatter": "./bin/sqlfmt.js"
   },
+  "pkg": {
+    "options": [
+      "experimental-modules"
+    ]
+  },
   "keywords": [
     "sql",
     "formatter",
@@ -66,6 +71,7 @@
     "check": "npm run pretty:check && npm run lint && npm run test",
     "build": "npm run build:commonjs && npm run build:umd && npm run build:umd:min",
     "build:commonjs": "babel src --out-dir lib",
+    "build:package": "pkg .",
     "build:umd": "webpack --config webpack.dev.js",
     "build:umd:min": "webpack --config webpack.prod.js",
     "prepare": "npm run clean && npm run check && npm run build"
