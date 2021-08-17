@@ -151,8 +151,8 @@ export default class Tokenizer {
   getCloseParenToken(input) {
     return this.getTokenOnFirstMatch({
       input,
-      type: tokenTypes.END_OF_QUERY,
-      regex: this.END_OF_QUERY_REGEX,
+      type: tokenTypes.CLOSE_PAREN,
+      regex: this.CLOSE_PAREN_REGEX,
     });
   }
 
